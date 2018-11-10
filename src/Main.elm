@@ -1,7 +1,7 @@
 module Main exposing (Model, Msg(..), init, main, update, view)
 
 import Browser
-import Html exposing (Html, div, h1, h2, img, input, text, ul)
+import Html exposing (Html, div, h1, h2, img, input, p, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onClick, onInput)
 
@@ -19,6 +19,7 @@ type alias Model =
 type alias Result =
     { name : String
     , description : String
+    , address : String
     }
 
 
@@ -29,15 +30,19 @@ init =
             -- sample data
             [ { name = "sampleResult"
               , description = "A sample zord result"
+              , address = " 101 fake street"
               }
             , { name = "sampleResult"
               , description = "A sample zord result"
+              , address = " 101 fake street"
               }
             , { name = "sampleResult"
               , description = "A sample zord result"
+              , address = " 101 fake street"
               }
             , { name = "sampleResult"
               , description = "A sample zord result"
+              , address = " 101 fake street"
               }
             ]
       }
@@ -90,6 +95,7 @@ view model =
                     [ class "searchInput"
                     , value model.searchTerm
                     , onInput SearchTermChange
+                    , placeholder "Search for places"
                     ]
                     []
                 ]
@@ -113,7 +119,8 @@ renderResult : Result -> Html msg
 renderResult res =
     div [ class "result" ]
         [ h2 [] [ text res.name ]
-        , text res.description
+        , p [] [ text res.description ]
+        , p [] [ text res.address ]
         ]
 
 
