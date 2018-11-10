@@ -64,7 +64,7 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model "apollo" "waiting.gif" []
-    , getImages "apollo"
+    , getImages "space"
     )
 
 
@@ -117,8 +117,30 @@ view model =
         [ h2 [] [ text model.term ]
         , button [ onClick FetchImages ] [ text "More Please!" ]
         , br [] []
-        , img [ src model.url ] []
+        , img [ src model.url ]
+            []
+        , div
+            [ class "results" ]
+            (List.map renderItem model.images)
         ]
+
+
+renderItem : Item -> Html msg
+renderItem item =
+    case getFirstItem item.links of
+        Just link ->
+            div []
+                [ img [ src link.href ] []
+                ]
+
+        Nothing ->
+            div []
+                [ text "derp" ]
+
+
+getFirstItem : List a -> Maybe a
+getFirstItem list =
+    List.head list
 
 
 
