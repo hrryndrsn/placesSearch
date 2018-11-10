@@ -33,6 +33,23 @@ type alias Image =
     }
 
 
+type alias Item =
+    { href : String
+    , links : List Link
+    , data : List ImageData
+    }
+
+
+type alias Link =
+    { href : String
+    }
+
+
+type alias ImageData =
+    { title : String
+    }
+
+
 
 -- MODEL
 
@@ -40,7 +57,7 @@ type alias Image =
 type alias Model =
     { term : String
     , url : String
-    , images : List Image
+    , images : List Item
     }
 
 
@@ -57,7 +74,7 @@ init _ =
 
 type Msg
     = FetchImages
-    | NewImages (Result Http.Error (List Image))
+    | NewImages (Result Http.Error (List Item))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -122,12 +139,32 @@ constructURL term =
         ]
 
 
-getImagesDecoder : Decode.Decoder (List Image)
+getImagesDecoder : Decode.Decoder (List Item)
 getImagesDecoder =
-    Decode.at [ "collection", "items" ] (Decode.list imageDecoder)
+    Decode.at [ "collection", "items" ] (Decode.list itemDecoder)
 
 
 imageDecoder : Decode.Decoder Image
 imageDecoder =
     Decode.succeed Image
         |> required "href" Decode.string
+
+
+itemDecoder : Decode.Decoder Item
+itemDecoder =
+    Decode.succeed Item
+        |> required "href" Decode.string
+        |> required "links" (Decode.list linkDecoder)
+        |> required "data" (Decode.list imageDataDecoder)
+
+
+linkDecoder : Decode.Decoder Link
+linkDecoder =
+    Decode.succeed Link
+        |> required "href" Decode.string
+
+
+imageDataDecoder : Decode.Decoder ImageData
+imageDataDecoder =
+    Decode.succeed ImageData
+        |> required "title" Decode.string
