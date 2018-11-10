@@ -1,138 +1,116 @@
-module Main exposing (Model, Msg(..), init, main, update, view)
+module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder, init, main, subscriptions, update, view)
 
 import Browser
-import Html exposing (Html, div, h1, h2, img, input, p, text, ul)
+import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on, onClick, onInput)
+import Html.Events exposing (..)
+import Http
+import Json.Decode as Decode
+import Key exposing (key)
+import Url.Builder as Url
 
 
 
----- MODEL ----
+-- MAIN
+
+
+main =
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
+
+
+
+-- MODEL
 
 
 type alias Model =
-    { searchTerm : String
-    , results : List Result
+    { term : String
+    , url : String
     }
 
 
-type alias Result =
-    { name : String
-    , description : String
-    , address : String
-    }
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( { searchTerm = "thai food"
-      , results =
-            -- sample data
-            [ { name = "sampleResult"
-              , description = "A sample zord result"
-              , address = " 101 fake street"
-              }
-            , { name = "sampleResult"
-              , description = "A sample zord result"
-              , address = " 101 fake street"
-              }
-            , { name = "sampleResult"
-              , description = "A sample zord result"
-              , address = " 101 fake street"
-              }
-            , { name = "sampleResult"
-              , description = "A sample zord result"
-              , address = " 101 fake street"
-              }
-            ]
-      }
-    , Cmd.none
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( Model "apollo" "waiting.gif"
+    , getImages "apollo"
     )
 
 
 
----- UPDATE ----
+-- UPDATE
 
 
 type Msg
-    = NoOp
-    | SearchTermChange String
+    = FetchImages
+    | NewImages (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SearchTermChange term ->
-            ( { model | searchTerm = term }, Cmd.none )
+        FetchImages ->
+            ( model
+            , getImages model.term
+            )
 
-        _ ->
-            ( model, Cmd.none )
+        NewImages result ->
+            case result of
+                Ok newUrl ->
+                    ( { model | url = newUrl }
+                    , Cmd.none
+                    )
+
+                Err _ ->
+                    ( model
+                    , Cmd.none
+                    )
 
 
 
----- VIEW ----
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
+
+
+-- VIEW
 
 
 view : Model -> Html Msg
 view model =
     div []
-        -- Nav bar
-        [ div [ class "nav" ]
-            [ img
-                [ src "/logo.svg" ]
-                []
-            , div [ class "siteTitle" ]
-                [ text "Zording with elm "
-                ]
-            ]
-
-        -- Main body
-        , div
-            [ class "container" ]
-            -- Search box
-            [ div [ class "search" ]
-                [ input
-                    [ class "searchInput"
-                    , value model.searchTerm
-                    , onInput SearchTermChange
-                    , placeholder "Search for places"
-                    ]
-                    []
-                ]
-
-            -- results
-            , ul [ class "results" ]
-                -- replace with array of results
-                (List.map
-                    renderResult
-                    model.results
-                )
-            ]
+        [ h2 [] [ text model.term ]
+        , button [ onClick FetchImages ] [ text "More Please!" ]
+        , br [] []
+        , img [ src model.url ] []
         ]
 
 
 
----- VIEW HELPERS ---
+-- HTTP
 
 
-renderResult : Result -> Html msg
-renderResult res =
-    div [ class "result" ]
-        [ h2 [] [ text res.name ]
-        , p [] [ text res.description ]
-        , p [] [ text res.address ]
+getImages : String -> Cmd Msg
+getImages term =
+    Http.send NewImages (Http.get (constructURL term) getImagesDecoder)
+
+
+constructURL : String -> String
+constructURL term =
+    Url.crossOrigin "https://images-api.nasa.gov"
+        [ "search" ]
+        [ Url.string "q" term
+        , Url.string "media_type" "image"
         ]
 
 
-
----- PROGRAM ----
-
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { view = view
-        , init = \_ -> init
-        , update = update
-        , subscriptions = always Sub.none
-        }
+getImagesDecoder : Decode.Decoder String
+getImagesDecoder =
+    Decode.field "collection" (Decode.field "href" Decode.string)
