@@ -42,3 +42,8 @@ img {
   font-size: 20px;
   margin: 20px 0;
 }
+
+ul.results {
+  margin: 0;
+  padding: 0;
+}

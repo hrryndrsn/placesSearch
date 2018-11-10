@@ -1,7 +1,7 @@
 module Main exposing (Model, Msg(..), init, main, update, view)
 
 import Browser
-import Html exposing (Html, div, h1, img, input, text)
+import Html exposing (Html, div, h1, h2, img, input, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, onClick, onInput)
 
@@ -11,12 +11,38 @@ import Html.Events exposing (on, onClick, onInput)
 
 
 type alias Model =
-    { searchTerm : String }
+    { searchTerm : String
+    , results : List Result
+    }
+
+
+type alias Result =
+    { name : String
+    , description : String
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { searchTerm = "thai food" }, Cmd.none )
+    ( { searchTerm = "thai food"
+      , results =
+            -- sample data
+            [ { name = "sampleResult"
+              , description = "A sample zord result"
+              }
+            , { name = "sampleResult"
+              , description = "A sample zord result"
+              }
+            , { name = "sampleResult"
+              , description = "A sample zord result"
+              }
+            , { name = "sampleResult"
+              , description = "A sample zord result"
+              }
+            ]
+      }
+    , Cmd.none
+    )
 
 
 
@@ -58,13 +84,36 @@ view model =
         -- Main body
         , div
             [ class "container" ]
-            [ input
-                [ class "searchInput"
-                , value model.searchTerm
-                , onInput SearchTermChange
+            -- Search box
+            [ div [ class "search" ]
+                [ input
+                    [ class "searchInput"
+                    , value model.searchTerm
+                    , onInput SearchTermChange
+                    ]
+                    []
                 ]
-                []
+
+            -- results
+            , ul [ class "results" ]
+                -- replace with array of results
+                (List.map
+                    renderResult
+                    model.results
+                )
             ]
+        ]
+
+
+
+---- VIEW HELPERS ---
+
+
+renderResult : Result -> Html msg
+renderResult res =
+    div [ class "result" ]
+        [ h2 [] [ text res.name ]
+        , text res.description
         ]
 
 
