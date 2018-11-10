@@ -63,8 +63,12 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "apollo" "waiting.gif" []
-    , getImages "space"
+    let
+        term =
+            "rocket"
+    in
+    ( Model term "waiting.gif" []
+    , getImages term
     )
 
 
@@ -113,29 +117,36 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "container" ]
         [ h2 [] [ text model.term ]
         , button [ onClick FetchImages ] [ text "More Please!" ]
         , br [] []
         , img [ src model.url ]
             []
         , div
-            [ class "results" ]
+            [ class "resultsGroup" ]
             (List.map renderItem model.images)
         ]
 
 
 renderItem : Item -> Html msg
 renderItem item =
+    --Unwrap records from lists
     case getFirstItem item.links of
         Just link ->
-            div []
-                [ img [ src link.href ] []
-                ]
+            case getFirstItem item.data of
+                Just imageData ->
+                    --we know we have both img src url and image meta data
+                    div [ class "item" ]
+                        [ img [ src link.href ] []
+                        , div [ class "itemDetails" ] [ text imageData.title ]
+                        ]
+
+                Nothing ->
+                    text ""
 
         Nothing ->
-            div []
-                [ text "derp" ]
+            text ""
 
 
 getFirstItem : List a -> Maybe a

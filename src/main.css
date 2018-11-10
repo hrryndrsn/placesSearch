@@ -2,7 +2,8 @@ body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   text-align: left;
-  color: #293c4b;
+  color: #eee;
+  background: #000;
 }
 
 h1 {
@@ -60,4 +61,21 @@ ul.results {
 
 .result:hover {
   background: #eee;
+}
+
+.resultsGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.item {
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.item:hover {
+  opacity: 1;
+}
+.item img {
+  width: 100%;
 }
