@@ -2,7 +2,7 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (class, src, value)
+import Html.Attributes exposing (autofocus, class, placeholder, src, value)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
@@ -65,7 +65,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     let
         term =
-            "jupiter"
+            "black hole"
     in
     ( Model term "waiting.gif" []
     , getImages term
@@ -80,6 +80,7 @@ type Msg
     = FetchImages
     | NewImages (Result Http.Error (List Item))
     | UpdateSearchTerm String
+    | KeyDown Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -107,6 +108,15 @@ update msg model =
             , Cmd.none
             )
 
+        KeyDown key ->
+            if key == 13 then
+                ( model
+                , getImages model.term
+                )
+
+            else
+                ( model, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
@@ -129,8 +139,14 @@ view model =
 
         -- search input and button
         , div [ class "searchGroup" ]
-            [ input [ class "searchInput", value model.term, onInput UpdateSearchTerm ] []
-            , button [ class "searchButton", onClick FetchImages ] [ text "Search" ]
+            [ input
+                [ class "searchInput"
+                , value model.term
+                , onInput UpdateSearchTerm
+                , onKeyDown KeyDown
+                , placeholder "Search for images"
+                ]
+                []
             ]
 
         -- results
@@ -138,6 +154,11 @@ view model =
             [ class "resultsGroup" ]
             (List.map renderItem model.images)
         ]
+
+
+onKeyDown : (Int -> msg) -> Attribute msg
+onKeyDown tagger =
+    on "keydown" (Decode.map tagger keyCode)
 
 
 renderItem : Item -> Html msg
