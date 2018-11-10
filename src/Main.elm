@@ -2,10 +2,11 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (class, src)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (custom, hardcoded, required)
 import Key exposing (key)
 import Url.Builder as Url
 
@@ -24,18 +25,28 @@ main =
 
 
 
+--TYPES
+
+
+type alias Image =
+    { link : String
+    }
+
+
+
 -- MODEL
 
 
 type alias Model =
     { term : String
     , url : String
+    , images : List Image
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "apollo" "waiting.gif"
+    ( Model "apollo" "waiting.gif" []
     , getImages "apollo"
     )
 
@@ -46,7 +57,7 @@ init _ =
 
 type Msg
     = FetchImages
-    | NewImages (Result Http.Error String)
+    | NewImages (Result Http.Error (List Image))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -59,8 +70,8 @@ update msg model =
 
         NewImages result ->
             case result of
-                Ok newUrl ->
-                    ( { model | url = newUrl }
+                Ok images ->
+                    ( { model | images = images }
                     , Cmd.none
                     )
 
@@ -111,6 +122,12 @@ constructURL term =
         ]
 
 
-getImagesDecoder : Decode.Decoder String
+getImagesDecoder : Decode.Decoder (List Image)
 getImagesDecoder =
-    Decode.field "collection" (Decode.field "href" Decode.string)
+    Decode.at [ "collection", "items" ] (Decode.list imageDecoder)
+
+
+imageDecoder : Decode.Decoder Image
+imageDecoder =
+    Decode.succeed Image
+        |> required "href" Decode.string
