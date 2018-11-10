@@ -2,11 +2,11 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (autofocus, class, placeholder, src, value)
+import Html.Attributes exposing (autofocus, class, href, placeholder, src, value)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (custom, hardcoded, required)
+import Json.Decode.Pipeline exposing (custom, hardcoded, optional, required)
 import Key exposing (key)
 import Url.Builder as Url
 
@@ -47,6 +47,8 @@ type alias Link =
 
 type alias ImageData =
     { title : String
+    , description : String
+    , keywords : List String
     }
 
 
@@ -135,7 +137,7 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         -- page title
-        [ h2 [ class "siteTitle" ] [ text "image explore" ]
+        [ h2 [ class "siteTitle" ] [ a [ href "https://images.nasa.gov/" ] [ text "Explore images-api.nasa.gov" ] ]
 
         -- search input and button
         , div [ class "searchGroup" ]
@@ -145,6 +147,8 @@ view model =
                 , onInput UpdateSearchTerm
                 , onKeyDown KeyDown
                 , placeholder "Search for images"
+                , autofocus
+                    True
                 ]
                 []
             ]
@@ -233,3 +237,5 @@ imageDataDecoder : Decode.Decoder ImageData
 imageDataDecoder =
     Decode.succeed ImageData
         |> required "title" Decode.string
+        |> hardcoded "Classified"
+        |> hardcoded [ "keywords", "keywords" ]
