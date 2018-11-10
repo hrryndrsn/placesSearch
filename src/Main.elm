@@ -2,7 +2,7 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (class, src)
+import Html.Attributes exposing (class, src, value)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
@@ -65,7 +65,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     let
         term =
-            "rocket"
+            "jupiter"
     in
     ( Model term "waiting.gif" []
     , getImages term
@@ -79,6 +79,7 @@ init _ =
 type Msg
     = FetchImages
     | NewImages (Result Http.Error (List Item))
+    | UpdateSearchTerm String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -101,6 +102,11 @@ update msg model =
                     , Cmd.none
                     )
 
+        UpdateSearchTerm term ->
+            ( { model | term = term }
+            , Cmd.none
+            )
+
 
 
 -- SUBSCRIPTIONS
@@ -118,11 +124,16 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ h2 [] [ text model.term ]
-        , button [ onClick FetchImages ] [ text "More Please!" ]
-        , br [] []
-        , img [ src model.url ]
-            []
+        -- page title
+        [ h2 [ class "siteTitle" ] [ text "image explore" ]
+
+        -- search input and button
+        , div [ class "searchGroup" ]
+            [ input [ class "searchInput", value model.term, onInput UpdateSearchTerm ] []
+            , button [ class "searchButton", onClick FetchImages ] [ text "Search" ]
+            ]
+
+        -- results
         , div
             [ class "resultsGroup" ]
             (List.map renderItem model.images)

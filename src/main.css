@@ -30,7 +30,14 @@ h2 {
 }
 
 .siteTitle {
-  line-height: 50px;
+  color:  rgba(255, 255, 255, 0.25);
+  padding: 20px;
+}
+
+
+.searchGroup {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
 }
 
 .searchInput {
@@ -42,10 +49,28 @@ h2 {
   border-radius: 5px;
   border: none;
   padding-left: 20px;
+  background: #000;
+  color: rgba(255, 255, 255, 0.25);
+  transition: color 0.5s ease-in-out
 }
 
-.searchInput:hover {
-  background: #eee
+.searchButton {
+  background: #000;
+  color: #fff;
+  border: none;
+  outline: none;
+  transition: background 0.1s ease-in-out;
+  font-family: inherit;
+  font-size: 24px;
+}
+
+.searchButton:hover {
+  background: white;
+  color: black;
+}
+
+.searchInput:focus {
+  color: rgba(255, 255, 255, 1);
 }
 
 ul.results {
@@ -69,11 +94,25 @@ ul.results {
 }
 
 .item {
+  position: relative;
   max-height: 400px;
   overflow: hidden;
 }
 
-.item:hover {
+.itemDetails {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  width: 100%;
+  transition: visibility 0s, opacity 0.2s ease-in-out;
+}
+
+
+.item:hover .itemDetails {
+  visibility: visible;
   opacity: 1;
 }
 .item img {
