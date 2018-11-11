@@ -2,7 +2,7 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (autofocus, class, href, placeholder, src, value)
+import Html.Attributes exposing (autofocus, class, href, id, placeholder, src, value)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode
@@ -52,6 +52,12 @@ type alias ImageData =
     }
 
 
+type GridSetting
+    = OneCol
+    | TwoCol
+    | FourCol
+
+
 
 -- MODEL
 
@@ -61,6 +67,7 @@ type alias Model =
     , url : String
     , images : List Item
     , isLoading : Bool
+    , gridSetting : GridSetting
     }
 
 
@@ -70,7 +77,11 @@ init _ =
         term =
             "black hole"
     in
-    ( Model term "waiting.gif" [] False
+    ( Model term
+        "waiting.gif"
+        []
+        False
+        TwoCol
     , getImages term
     )
 
@@ -84,6 +95,7 @@ type Msg
     | NewImages (Result Http.Error (List Item))
     | UpdateSearchTerm String
     | KeyDown Int
+    | SetGrid GridSetting
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -126,6 +138,29 @@ update msg model =
             else
                 ( model, Cmd.none )
 
+        SetGrid newSetting ->
+            case newSetting of
+                OneCol ->
+                    ( { model
+                        | gridSetting = newSetting
+                      }
+                    , Cmd.none
+                    )
+
+                TwoCol ->
+                    ( { model
+                        | gridSetting = newSetting
+                      }
+                    , Cmd.none
+                    )
+
+                FourCol ->
+                    ( { model
+                        | gridSetting = newSetting
+                      }
+                    , Cmd.none
+                    )
+
 
 
 -- SUBSCRIPTIONS
@@ -144,7 +179,7 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         -- page title
-        [ h2 [ class "siteTitle" ] [ a [ href "https://images.nasa.gov/" ] [ text "Explore images-api.nasa.gov" ] ]
+        [ h2 [ class "siteTitle", id "top" ] [ a [ href "https://images.nasa.gov/" ] [ text "Explore images-api.nasa.gov" ] ]
 
         -- search input and button
         , div [ class "searchGroup" ]
@@ -162,7 +197,7 @@ view model =
 
         -- results
         , div
-            [ class "resultsGroup" ]
+            [ class (resultsGroupClassList model.gridSetting) ]
             -- if isLoading is true show the spinner, else show the results
             (case model.isLoading of
                 True ->
@@ -176,7 +211,33 @@ view model =
                 False ->
                     List.map renderItem model.images
             )
+        , renderGridControls
         ]
+
+
+renderGridControls : Html Msg
+renderGridControls =
+    div [ class "gridSettings" ]
+        [ a [ href "#top" ]
+            [ button [ class "gridSettingButton" ] [ text "Top" ]
+            ]
+        , button [ class "gridSettingButton", onClick (SetGrid OneCol) ] [ text "1" ]
+        , button [ class "gridSettingButton", onClick (SetGrid TwoCol) ] [ text "2" ]
+        , button [ class "gridSettingButton", onClick (SetGrid FourCol) ] [ text "3" ]
+        ]
+
+
+resultsGroupClassList : GridSetting -> String
+resultsGroupClassList gridSetting =
+    case gridSetting of
+        OneCol ->
+            "resultsGroup oneCol"
+
+        TwoCol ->
+            "resultsGroup twoCol"
+
+        FourCol ->
+            "resultsGroup fourCol"
 
 
 onKeyDown : (Int -> msg) -> Attribute msg
@@ -193,8 +254,12 @@ renderItem item =
                 Just imageData ->
                     --we know we have both img src url and image meta data
                     div [ class "item" ]
-                        [ div [ class "itemImage" ] [ img [ src link.href ] [] ]
-                        , div [ class "itemDetails" ] [ p [ class "itemName" ] [ text imageData.title ] ]
+                        [ div [ class "itemImage" ]
+                            [ img [ src link.href ] []
+                            ]
+                        , div [ class "itemDetails" ]
+                            [ p [ class "itemName" ] [ text imageData.title ]
+                            ]
                         ]
 
                 Nothing ->
@@ -256,5 +321,5 @@ imageDataDecoder : Decode.Decoder ImageData
 imageDataDecoder =
     Decode.succeed ImageData
         |> required "title" Decode.string
-        |> hardcoded "Classified"
+        |> optional "description" Decode.string "Classified"
         |> hardcoded [ "keywords", "keywords" ]

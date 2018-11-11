@@ -58,7 +58,7 @@ h2 {
   transition: color 0.5s ease-in-out;
   background: #1A1A1A;
   box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 10px 30px;
 }
 
@@ -86,6 +86,7 @@ ul.results {
   padding: 0 20px;
 }
 
+/* Results  */
 .result {
   border-bottom: 1px solid #eee;
   transition: background 0.1s ease-in-out;
@@ -98,18 +99,54 @@ ul.results {
 
 .resultsGroup {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 20px;
+  transition: 0.5s ease-in-out;
+}
+
+/* One col styles  */
+.oneCol {
+  grid-template-columns: 1fr;
+  transition: 0.5s ease-in-out;
+}
+
+.oneCol div.item {
+  max-height: 75vw;
+  grid-template-rows: 9fr 1fr;
+  transition: 0.5s ease-in-out;
+}
+
+/* two col styles  */
+.twoCol {
+  grid-template-columns: 1fr 1fr;
+  max-height: 40vw;
+  transition: 0.5s ease-in-out;
+}
+
+.twoCol div.item {
+  max-height: 40vw;
+  grid-template-rows: 6fr 1fr;
+  transition: 0.5s ease-in-out;
+}
+
+/* four col styles */
+.fourCol {
+  grid-template-columns: 1fr 1fr 1fr 1fr  ;
+  transition: 0.5s ease-in-out;
+}
+.fourCol div.item {
+  max-height: 20vw;
+  grid-template-rows: 3fr 1fr;
+  transition:  0.5s ease-in-out;
 }
 
 .item {
   position: relative;
-  max-height: 500px;
   display: grid;
   grid-template-rows: 5fr 1fr;
   background:  #1A1A1A;
   border-radius: 10px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .itemImage {
@@ -119,7 +156,7 @@ ul.results {
 .itemImage img {
   width: 100%;
   height: 100%;
- object-fit: cover;
+  object-fit: cover;
 }
 
 .itemDetails {
@@ -138,6 +175,30 @@ ul.results {
   color: #fff;
 }
 
+.gridSettings {
+  position: fixed;
+  top: 40vh;
+  left: 45px;;
+  display: grid;
+  grid-template-rows: 3fr;
+  row-gap: 25px;
+}
+
+.gridSettings button {
+  background: none;
+  color: rgba(255, 255, 255, 0.50);
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  height: 50px;
+  width: 50px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gridSettings button:hover {
+  background: #1A1A1A;
+}
 
 /* Loading  balls ------------------------------------------------------- */
 
