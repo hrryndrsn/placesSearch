@@ -60,6 +60,7 @@ type alias Model =
     { term : String
     , url : String
     , images : List Item
+    , isLoading : Bool
     }
 
 
@@ -69,7 +70,7 @@ init _ =
         term =
             "black hole"
     in
-    ( Model term "waiting.gif" []
+    ( Model term "waiting.gif" [] False
     , getImages term
     )
 
@@ -96,7 +97,10 @@ update msg model =
         NewImages result ->
             case result of
                 Ok images ->
-                    ( { model | images = images }
+                    ( { model
+                        | images = images
+                        , isLoading = False
+                      }
                     , Cmd.none
                     )
 
@@ -112,7 +116,10 @@ update msg model =
 
         KeyDown key ->
             if key == 13 then
-                ( model
+                ( { model
+                    | images = []
+                    , isLoading = True
+                  }
                 , getImages model.term
                 )
 
@@ -156,7 +163,19 @@ view model =
         -- results
         , div
             [ class "resultsGroup" ]
-            (List.map renderItem model.images)
+            -- if isLoading is true show the spinner, else show the results
+            (case model.isLoading of
+                True ->
+                    [ div [ class "loader" ]
+                        [ div [ class "line" ] []
+                        , div [ class "line" ] []
+                        , div [ class "line" ] []
+                        ]
+                    ]
+
+                False ->
+                    List.map renderItem model.images
+            )
         ]
 
 
