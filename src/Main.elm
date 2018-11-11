@@ -61,6 +61,12 @@ type GridSetting
     | FourCol
 
 
+type alias ResultItem =
+    { link : String
+    , data : ImageData
+    }
+
+
 
 -- MODEL
 
@@ -71,6 +77,19 @@ type alias Model =
     , images : List Item
     , isLoading : Bool
     , gridSetting : GridSetting
+    , selectedItem : ResultItem
+    , viewModal : Bool
+    }
+
+
+noItemSelected : ResultItem
+noItemSelected =
+    { link = ""
+    , data =
+        { title = ""
+        , description = ""
+        , keywords = [ "" ]
+        }
     }
 
 
@@ -85,6 +104,8 @@ init _ =
         []
         False
         TwoCol
+        noItemSelected
+        False
     , getImages term
     )
 
@@ -99,6 +120,8 @@ type Msg
     | UpdateSearchTerm String
     | KeyDown Int
     | SetGrid GridSetting
+    | ItemSelected ResultItem
+    | CloseModal
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -164,6 +187,22 @@ update msg model =
                     , Cmd.none
                     )
 
+        ItemSelected item ->
+            ( { model
+                | selectedItem = item
+                , viewModal = True
+              }
+            , Cmd.none
+            )
+
+        CloseModal ->
+            ( { model
+                | selectedItem = noItemSelected
+                , viewModal = False
+              }
+            , Cmd.none
+            )
+
 
 
 -- SUBSCRIPTIONS
@@ -219,7 +258,34 @@ view model =
                     List.map renderItem model.images
             )
         , renderGridControls
+        , case model.viewModal of
+            True ->
+                imageDetailsModal model.selectedItem
+
+            False ->
+                div [] []
         ]
+
+
+imageDetailsModal : ResultItem -> Html Msg
+imageDetailsModal item =
+    div [ class "modalContainer" ]
+        [ div [ class "modalBlanket", onClick CloseModal ] []
+        , div [ class "selectedImageModal" ]
+            [ div [ class "modalImage" ] [ img [ src item.link ] [] ]
+            , div [ class "ModalImageDetails" ]
+                [ button [ class "closeButton", onClick CloseModal ] [ text "close" ]
+                , h2 [] [ text item.data.title ]
+                , p [] (List.map renderKeywords item.data.keywords)
+                , p [] [ text item.data.description ]
+                ]
+            ]
+        ]
+
+
+renderKeywords : String -> Html msg
+renderKeywords word =
+    text word
 
 
 renderGridControls : Html Msg
@@ -263,7 +329,7 @@ onKeyDown tagger =
     on "keydown" (Decode.map tagger keyCode)
 
 
-renderItem : Item -> Html msg
+renderItem : Item -> Html Msg
 renderItem item =
     --Unwrap records from lists
     case getFirstItem item.links of
@@ -271,7 +337,7 @@ renderItem item =
             case getFirstItem item.data of
                 Just imageData ->
                     --we know we have both img src url and image meta data
-                    div [ class "item" ]
+                    div [ class "item", onClick (ItemSelected (ResultItem link.href imageData)) ]
                         [ div [ class "itemImage" ]
                             [ img [ src link.href ] []
                             ]
