@@ -28,18 +28,19 @@ h2 {
 }
 
 .siteTitle {
-  
-  padding: 20px;
   font-size: 16px;
-  text-align: right;
+  margin-top: 100px;
+  opacity: 0.5;
+  line-height: 60px;
 }
 
 .siteTitle a {
-  color:  rgb(250, 100, 0);
+  color:  #00FE75;
+  text-decoration: none;
 }
 
 
-.siteTitle a:visited { text-decoration: none; color: #444; }
+.siteTitle a:visited { text-decoration: none; color: #00FE75 }
 
 
 .searchGroup {
@@ -51,7 +52,7 @@ h2 {
 .searchInput {
   outline: none;
   font-size: 50px;
-  margin: 80px 0;
+  margin-bottom: 80px;
   border-radius: 5px;
   border: none;
   color: rgba(255, 255, 255, 0.25);
@@ -198,6 +199,13 @@ ul.results {
 
 .gridSettings button:hover {
   background: #1A1A1A;
+  color: white;
+  fill: white;
+}
+
+.searchIcon {
+  margin-top: 5px;
+  fill: rgba(255, 255, 255, 0.50);
 }
 
 /* Loading  balls ------------------------------------------------------- */

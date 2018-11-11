@@ -5,9 +5,12 @@ import Html exposing (..)
 import Html.Attributes exposing (autofocus, class, href, id, placeholder, src, value)
 import Html.Events exposing (..)
 import Http
+import Icons
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (custom, hardcoded, optional, required)
 import Key exposing (key)
+import Svg exposing (path, svg)
+import Svg.Attributes exposing (class, clip, clipRule, d, fill, fillRule, height, viewBox, width)
 import Url.Builder as Url
 
 
@@ -179,7 +182,11 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         -- page title
-        [ h2 [ class "siteTitle", id "top" ] [ a [ href "https://images.nasa.gov/" ] [ text "Explore images-api.nasa.gov" ] ]
+        [ p [ class "siteTitle", id "top" ]
+            [ text "Explore "
+            , a [ href "https://images.nasa.gov/" ] [ text "images-api.nasa.gov" ]
+            , text " with keyword search"
+            ]
 
         -- search input and button
         , div [ class "searchGroup" ]
@@ -219,11 +226,22 @@ renderGridControls : Html Msg
 renderGridControls =
     div [ class "gridSettings" ]
         [ a [ href "#top" ]
-            [ button [ class "gridSettingButton" ] [ text "Top" ]
+            [ button [ class "gridSettingButton" ] [ renderSearchIcon ]
             ]
-        , button [ class "gridSettingButton", onClick (SetGrid OneCol) ] [ text "1" ]
-        , button [ class "gridSettingButton", onClick (SetGrid TwoCol) ] [ text "2" ]
-        , button [ class "gridSettingButton", onClick (SetGrid FourCol) ] [ text "3" ]
+        , button [ class "gridSettingButton", onClick (SetGrid OneCol) ] [ text "I" ]
+        , button [ class "gridSettingButton", onClick (SetGrid TwoCol) ] [ text "II" ]
+        , button [ class "gridSettingButton", onClick (SetGrid FourCol) ]
+            [ text "IIII" ]
+        ]
+
+
+renderSearchIcon : Html msg
+renderSearchIcon =
+    svg
+        [ class "searchIcon", width "14", height "14", viewBox "0 0 14 14", fill "none" ]
+        [ path
+            [ fillRule "evenodd", clipRule "evenodd", d Icons.search ]
+            []
         ]
 
 
