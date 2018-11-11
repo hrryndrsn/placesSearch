@@ -193,8 +193,8 @@ renderItem item =
                 Just imageData ->
                     --we know we have both img src url and image meta data
                     div [ class "item" ]
-                        [ img [ src link.href ] []
-                        , div [ class "itemDetails" ] [ text imageData.title ]
+                        [ div [ class "itemImage" ] [ img [ src link.href ] [] ]
+                        , div [ class "itemDetails" ] [ p [ class "itemName" ] [ text imageData.title ] ]
                         ]
 
                 Nothing ->
