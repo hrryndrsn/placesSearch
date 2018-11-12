@@ -276,7 +276,6 @@ imageDetailsModal item =
             , div [ class "modalImageDetails" ]
                 [ button [ class "closeButton", onClick CloseModal ] [ text "close" ]
                 , h2 [] [ text item.data.title ]
-                , p [] (List.map renderKeywords item.data.keywords)
                 , p [] [ text item.data.description ]
                 ]
             ]
@@ -298,6 +297,10 @@ renderGridControls =
         , button [ class "gridSettingButton", onClick (SetGrid TwoCol) ] [ text "II" ]
         , button [ class "gridSettingButton", onClick (SetGrid FourCol) ]
             [ text "IIII" ]
+        , a [ href "https://github.com/hrryndrsn/placesSearch" ]
+            [ button [ class "gridSettingButton" ]
+                [ renderGithubIcon ]
+            ]
         ]
 
 
@@ -307,6 +310,16 @@ renderSearchIcon =
         [ class "searchIcon", width "14", height "14", viewBox "0 0 14 14", fill "none" ]
         [ path
             [ fillRule "evenodd", clipRule "evenodd", d Icons.search ]
+            []
+        ]
+
+
+renderGithubIcon : Html msg
+renderGithubIcon =
+    svg
+        [ class "searchIcon", width "24", height "24", viewBox "0 0 24 24", fill "none" ]
+        [ path
+            [ fillRule "evenodd", clipRule "evenodd", d Icons.github ]
             []
         ]
 
