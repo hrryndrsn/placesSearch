@@ -273,7 +273,7 @@ imageDetailsModal item =
         [ div [ class "modalBlanket", onClick CloseModal ] []
         , div [ class "selectedImageModal" ]
             [ div [ class "modalImage" ] [ img [ src item.link ] [] ]
-            , div [ class "ModalImageDetails" ]
+            , div [ class "modalImageDetails" ]
                 [ button [ class "closeButton", onClick CloseModal ] [ text "close" ]
                 , h2 [] [ text item.data.title ]
                 , p [] (List.map renderKeywords item.data.keywords)
@@ -285,7 +285,7 @@ imageDetailsModal item =
 
 renderKeywords : String -> Html msg
 renderKeywords word =
-    text word
+    text (word ++ " ")
 
 
 renderGridControls : Html Msg
@@ -406,4 +406,4 @@ imageDataDecoder =
     Decode.succeed ImageData
         |> required "title" Decode.string
         |> optional "description" Decode.string "Classified"
-        |> hardcoded [ "keywords", "keywords" ]
+        |> optional "keywords" (Decode.list Decode.string) [ "no keywords" ]
