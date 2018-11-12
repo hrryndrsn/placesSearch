@@ -274,9 +274,13 @@ imageDetailsModal item =
         , div [ class "selectedImageModal" ]
             [ div [ class "modalImage" ] [ img [ src item.link ] [] ]
             , div [ class "modalImageDetails" ]
-                [ button [ class "closeButton", onClick CloseModal ] [ text "close" ]
-                , h2 [] [ text item.data.title ]
-                , p [] [ text item.data.description ]
+                [ div [ class "modalHeaderBlock" ]
+                    [ button [ class "closeButton", onClick CloseModal ] [ renderCloseIcon ]
+                    ]
+                , div [ class "modalDetailsBlock" ]
+                    [ h2 [ class "modalHeading" ] [ text item.data.title ]
+                    , p [ class "modelDescription" ] [ text item.data.description ]
+                    ]
                 ]
             ]
         ]
@@ -301,6 +305,16 @@ renderGridControls =
             [ button [ class "gridSettingButton" ]
                 [ renderGithubIcon ]
             ]
+        ]
+
+
+renderCloseIcon : Html msg
+renderCloseIcon =
+    svg
+        [ class "searchIcon", width "17", height "17", viewBox "0 0 17 17", fill "none" ]
+        [ path
+            [ fillRule "evenodd", clipRule "evenodd", d Icons.close ]
+            []
         ]
 
 

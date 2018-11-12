@@ -219,7 +219,7 @@ ul.results {
   /* height: 80vh; */
   height: 90vh;
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 4fr 1fr;
 }
 
 .modalBlanket {
@@ -235,11 +235,11 @@ ul.results {
 
 .selectedImageModal {
   /* width: 100%; */
-  overflow: hidden;
 }
 
 .modalImage {
-  width: 60vw;
+  width: 100%;
+  overflow: hidden;
 }
 
 .modalImage img {
@@ -249,14 +249,27 @@ ul.results {
 }
 
 .modalImageDetails {
-  display: grid;  
-  grid-template-rows: 1fr 1fr 6fr
+  margin-left: 20px;
+}
+
+.modalHeaderBlock {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .closeButton {
   width:  50px;
   height: 50px;
+  background: none;
+  color: white;
+  border: none;
+  outline: none;
+}
 
+.modelDescription {
+  font-size: 14px;
+  margin: 50px 20px 20px 0;
+  line-height: 20px;
 }
 
 
