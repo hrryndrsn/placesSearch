@@ -226,7 +226,9 @@ ul.results {
   /* height: 80vh; */
   height: 90vh;
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 1fr;
+  border-radius: 10px;  
+  overflow: hidden;
 }
 
 .modalBlanket {
@@ -257,28 +259,53 @@ ul.results {
 
 .modalImageDetails {
   margin-left: 20px;
+  width: 100%;
+  max-height: 30%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: #1a1a1a;
+  overflow: hidden; 
+  color:  rgba(255, 255, 255, 0.50);
 }
 
 .modalHeaderBlock {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 75px;
+  height: 75px;
+}
+
+.modalDetailsBlock {
+  padding: 10px 20px;
 }
 
 .closeButton {
   width:  50px;
-  height: 50px;
   background: none;
   color: white;
   border: none;
   outline: none;
 }
 
-.modelDescription {
-  font-size: 14px;
-  margin: 50px 20px 20px 0;
-  line-height: 20px;
+.closeButton svg:hover {
+  fill: white;
+  cursor: pointer;
 }
 
+.modelDescription {
+  font-size: 14px;
+  line-height: 20px;
+  max-height: 80px;
+    overflow: hidden;
+}
+
+.modalHeading {
+  color: white;
+}
 /* Media queries  */
 
 
@@ -305,6 +332,7 @@ ul.results {
     padding-left: 10px;
     font-size: 40px;
     margin-bottom: 20px;
+    width: 98%;
   }
 
   .gridSettings {
