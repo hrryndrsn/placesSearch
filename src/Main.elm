@@ -2,7 +2,7 @@ module Main exposing (Model, Msg(..), constructURL, getImages, getImagesDecoder,
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (autofocus, class, href, id, placeholder, src, value)
+import Html.Attributes exposing (autofocus, class, href, id, placeholder, src, target, value)
 import Html.Events exposing (..)
 import Http
 import Icons
@@ -297,12 +297,27 @@ renderGridControls =
         [ a [ href "#top" ]
             [ button [ class "gridSettingButton" ] [ renderSearchIcon ]
             ]
-        , button [ class "gridSettingButton", onClick (SetGrid OneCol) ] [ text "I" ]
-        , button [ class "gridSettingButton", onClick (SetGrid TwoCol) ] [ text "II" ]
-        , button [ class "gridSettingButton", onClick (SetGrid FourCol) ]
+        , button
+            [ class "gridSettingButton"
+            , onClick (SetGrid OneCol)
+            ]
+            [ text "I" ]
+        , button
+            [ class "gridSettingButton"
+            , onClick (SetGrid TwoCol)
+            ]
+            [ text "II" ]
+        , button
+            [ class "gridSettingButton"
+            , onClick (SetGrid FourCol)
+            ]
             [ text "IIII" ]
-        , a [ href "https://github.com/hrryndrsn/placesSearch" ]
-            [ button [ class "gridSettingButton" ]
+        , a
+            [ target "_blank"
+            , href "https://github.com/hrryndrsn/placesSearch"
+            ]
+            [ button
+                [ class "gridSettingButton githubButton" ]
                 [ renderGithubIcon ]
             ]
         ]
@@ -331,7 +346,7 @@ renderSearchIcon =
 renderGithubIcon : Html msg
 renderGithubIcon =
     svg
-        [ class "searchIcon", width "24", height "24", viewBox "0 0 24 24", fill "none" ]
+        [ class "searchIcon", width "16", height "16", viewBox "0 0 24 24", fill "none" ]
         [ path
             [ fillRule "evenodd", clipRule "evenodd", d Icons.github ]
             []

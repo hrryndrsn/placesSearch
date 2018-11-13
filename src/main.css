@@ -52,7 +52,7 @@ h2 {
 .searchInput {
   outline: none;
   font-size: 50px;
-  margin-bottom: 80px;
+  margin-bottom: 50px;
   border-radius: 5px;
   border: none;
   color: rgba(255, 255, 255, 0.25);
@@ -178,11 +178,13 @@ ul.results {
 
 .gridSettings {
   position: fixed;
-  top: 40vh;
-  left: 45px;;
+  top: 25vh;
+  left: 0;;
   display: grid;
   grid-template-rows: 3fr;
   row-gap: 25px;
+  width: 10vw;
+  justify-content: center;
 }
 
 .gridSettings button {
@@ -201,6 +203,11 @@ ul.results {
   background: #1A1A1A;
   color: white;
   fill: white;
+}
+
+.guthubIcon {
+  margin-top: 5px;
+  width: 50%;
 }
 
 .searchIcon {
@@ -272,6 +279,50 @@ ul.results {
   line-height: 20px;
 }
 
+/* Media queries  */
+
+
+/* M */ 
+@media (max-width: 900px) {
+  .gridSettings {
+    /* left: 2vw; */
+  }
+
+  .searchInput {
+    margin-bottom: 30px;
+  }
+}
+
+/* S */
+@media (max-width:700px) {
+  .siteTitle {
+    margin-top: 30px;
+  }
+
+  .searchInput {
+    padding: 0px;
+    line-height: 80px;
+    padding-left: 10px;
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .gridSettings {
+    position: fixed;
+    bottom: 0;
+    left: 10vw;
+    width: 80vw;
+    background: #000;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    top: auto;
+    padding: 20px 20px 20px 20px;
+  }
+
+  .itemDetails {
+    display: nonel
+  }
+}
 
 /* Loading  balls ------------------------------------------------------- */
 
